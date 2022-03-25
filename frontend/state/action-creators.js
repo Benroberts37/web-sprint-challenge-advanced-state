@@ -59,13 +59,17 @@ export function fetchQuiz() {
     // - Dispatch an action to send the obtained quiz to its state
   }
 }
-export function postAnswer() {
-  return function (dispatch) {
-    axios.post('')
-     .then(res => {
 
+export function postAnswer(quiz_id, answer_id) {
+  return function (dispatch) {
+    axios.post(`${URL}/answer`, {quiz_id, answer_id})
+     .then(res => {
+      dispatch(selectAnswer(null))
+      dispatch(setMessage(res.data.message))
+      dispatch(fetchQuiz())
     })
       .catch(err => {
+        dispatch(setMessage(err.message))
       
     })
     // On successful POST:
@@ -74,14 +78,16 @@ export function postAnswer() {
     // - Dispatch the fetching of the next quiz
   }
 }
-export function postQuiz() {
-  return function (dispatch) {
-    axios.post('')
-      .then(res => {
 
+export function postQuiz(form) {
+  return function (dispatch) {
+    axios.post(`${URL}/new`, payload)
+      .then(res => {
+        dispatch(setMessage(`Congrats: "${res.data.question} is a great question!`))
+        dispatch(resetForm())
     })
       .catch(err => {
-      
+      dispatch(setMessage(err.message))
     })
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
