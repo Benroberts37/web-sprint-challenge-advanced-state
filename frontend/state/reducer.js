@@ -13,7 +13,18 @@ import {
 const initialWheelState = 0
 function wheel(state = initialWheelState, action) {
   switch(action.type){
-
+    case MOVE_CLOCKWISE:
+      if (state === 5) {
+        return (state=0)
+      } else {
+        return (state + 1)
+      }
+    case MOVE_COUNTERCLOCKWISE:
+      if (state === 0) {
+        return (state = 5)
+      } else {
+        return (state - 1)
+      }
   default: 
     return state
   }
