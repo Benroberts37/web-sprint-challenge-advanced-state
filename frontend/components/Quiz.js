@@ -5,7 +5,7 @@ import * as actionCreators from '../state/action-creators'
 
 export function Quiz(props) {
   const {quiz, selectAnswer, postAnswer, selectedAnswer} = props
-  
+
 
   const handleSelect = id => {
     selectAnswer(id)
@@ -34,12 +34,12 @@ export function Quiz(props) {
               <div className="answer">
                 An elephant
                 <button>
-                  Select
+                  onClick={handleSelect}Select
                 </button>
               </div>
             </div>
 
-            <button id="submitAnswerBtn">Submit answer</button>
+            <button onClick={handleSubmit} id="submitAnswerBtn">Submit answer</button>
           </>
         ) : 'Loading next quiz...'
       }
