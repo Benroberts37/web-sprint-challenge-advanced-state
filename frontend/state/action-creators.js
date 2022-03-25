@@ -52,6 +52,7 @@ export function fetchQuiz() {
         dispatch(setQuiz(res.data))
       })
       .catch(err => {
+        console.log(err.message)
         console.error(err)
       })
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
@@ -69,6 +70,7 @@ export function postAnswer(quiz_id, answer_id) {
       dispatch(fetchQuiz())
     })
       .catch(err => {
+        console.log(err.message)
         dispatch(setMessage(err.message))
       
     })
@@ -87,6 +89,7 @@ export function postQuiz(form) {
         dispatch(resetForm())
     })
       .catch(err => {
+      console.log(err.message)  
       dispatch(setMessage(err.message))
     })
     // On successful POST:
