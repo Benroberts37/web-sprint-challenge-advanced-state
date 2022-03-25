@@ -83,6 +83,11 @@ export function postAnswer(quiz_id, answer_id) {
 
 export function postQuiz(form) {
   return function (dispatch) {
+    const payload = {
+      question_text: form.newQuestion,
+      false_answer_text: form.newFalseAnswer,
+      true_answer_text: form.newTrueAnswer,
+    }
     axios.post(`${URL}/new`, payload)
       .then(res => {
         dispatch(setMessage(`Congrats: "${res.data.question} is a great question!`))
