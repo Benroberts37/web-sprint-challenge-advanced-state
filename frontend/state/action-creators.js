@@ -11,6 +11,9 @@ import {
 } from './action-types'
 
 
+const URL = 'http://localhost9000/api/quiz'
+
+
 export function moveClockwise() { 
   return { type: MOVE_CLOCKWISE}
 }
@@ -19,35 +22,37 @@ export function moveCounterClockwise() {
   return { type: MOVE_COUNTERCLOCKWISE}
 }
 
-export function selectAnswer() { 
-  return { type: SET_SELECTED_ANSWER}
+export function selectAnswer(answerId) { 
+  return { type: SET_SELECTED_ANSWER, payload: answerId}
 }
 
-export function setMessage() {
-  return { type: SET_INFO_MESSAGE}
+export function setMessage(message) {
+  return { type: SET_INFO_MESSAGE, payload: message}
  }
 
-export function setQuiz() {
-  return { type: SET_QUIZ_INTO_STATE}
+export function setQuiz(quiz) {
+  return { type: SET_QUIZ_INTO_STATE, payload: quiz}
  }
 
-export function inputChange() { 
-  return { type: INPUT_CHANGE}
+export function inputChange({id, value}) { 
+  return { type: INPUT_CHANGE, payload: {id, value}}
 }
 
 export function resetForm() {
   return { type: RESET_FORM}
  }
 
+
 // ❗ Async action creators
 export function fetchQuiz() {
   return function (dispatch) {
-    axios.get('')
+    dispatch(setQuiz(null))
+    axios.get(`${URL}/next`)
       .then(res => {
-
+        dispatch(setQuiz(res.data))
       })
       .catch(err => {
-
+        console.error(err)
       })
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
     // On successful GET:
