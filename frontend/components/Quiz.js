@@ -4,8 +4,12 @@ import * as actionCreators from '../state/action-creators'
 
 
 export function Quiz(props) {
-  const {quiz, selectAnswer, postAnswer, selectedAnswer} = props
+  const {quiz, selectAnswer, postAnswer, selectedAnswer, fetchQuiz} = props
 
+
+  useEffect(() => {
+    !quiz && fetchQuiz()
+  }, [])
 
   const handleSelect = id => {
     selectAnswer(id)
@@ -19,27 +23,28 @@ export function Quiz(props) {
     <div id="wrapper">
       {
         // quiz already in state? Let's use that, otherwise render "Loading next quiz..."
-        true ? (
+        quiz ? (
           <>
             <h2>{quiz.question}</h2>
 
             <div id="quizAnswers">
-              <div className="answer selected">
-                A function
-                <button>
-                  SELECTED
+              <div className={`${selectedAnswer === quiz.answers[0].answer_id ? 'answer selected' : 'answer'}`}>
+                {quiz.answers[0].text}
+                <button onClick={() => handleSelect(quiz.answers[0].answer_id)}>
+                  {`${selectedAnswer === quiz.answers[0].answer_id ? 'SELECTED' : 'Select'}`}
                 </button>
               </div>
 
-              <div className="answer">
-                An elephant
-                <button>
-                  onClick={handleSelect}Select
+              <div className={`${selectedAnswer === quiz.answers[1].answer_id ? 'answer selected' : 'answer'}`}>
+                {quiz.answers[1].text}
+                <button onClick={() => handleSelect(quiz.answers[1].answer_id)}>
+                  {`${selectedAnswer === quiz.answers[1].answer_id ? 'SELECTED' : 'Select'}`}
                 </button>
               </div>
             </div>
 
-            <button onClick={handleSubmit} id="submitAnswerBtn">Submit answer</button>
+
+            <button onClick={handleSubmit} id="submitAnswerBtn" disabled={!selectedAnswer}>Submit answer</button>
           </>
         ) : 'Loading next quiz...'
       }
