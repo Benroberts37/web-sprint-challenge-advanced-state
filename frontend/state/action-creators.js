@@ -9,7 +9,7 @@ import {
   RESET_FORM,
 } from './action-types'
 
-import axios from 'axios'
+import axios from "axios"
 
 
 
@@ -29,8 +29,8 @@ export function setMessage(message) {
   return { type: SET_INFO_MESSAGE, payload: message}
  }
 
-export function setQuiz(quiz) {
-  return { type: SET_QUIZ_INTO_STATE, payload: quiz}
+export function setQuiz(quizData) {
+  return { type: SET_QUIZ_INTO_STATE, payload: quizData}
  }
 
 export function inputChange({id, value}) { 
@@ -45,13 +45,13 @@ export function resetForm() {
 // ❗ Async action creators
 export function fetchQuiz() {
   return function (dispatch) {
-    axios.get('http://localhost9000/api/quiz/next')
+    dispatch(setQuiz(null))
+    axios.get('http://localhost:9000/api/quiz/next')
       .then(res => {
         dispatch(setQuiz(res.data))
       })
       .catch(err => {
-        console.log(err.message)
-        console.error(err)
+        dispatch({type:null, payload: err.message})
       })
     // First, dispatch an action to reset the quiz state (so the "Loading next quiz..." message can display)
     // On successful GET:
@@ -61,15 +61,14 @@ export function fetchQuiz() {
 
 export function postAnswer(quiz_id, answer_id) {
   return function (dispatch) {
-    axios.post('http://localhost9000/api/quiz/answer', {quiz_id, answer_id})
+    axios.post('http://localhost:9000/api/quiz/answer', {quiz_id, answer_id})
      .then(res => {
       dispatch(selectAnswer(null))
       dispatch(setMessage(res.data.message))
       dispatch(fetchQuiz())
     })
       .catch(err => {
-        console.log(err.message)
-        dispatch(setMessage(err.message))
+        dispatch({type:null, payload: err.message})
       
     })
     // On successful POST:
@@ -79,25 +78,24 @@ export function postAnswer(quiz_id, answer_id) {
   }
 }
 
-export function postQuiz(form) {
+export function postQuiz(input) {
   return function (dispatch) {
-    const payload = {
-      question_text: form.newQuestion,
-      false_answer_text: form.newFalseAnswer,
-      true_answer_text: form.newTrueAnswer,
-    }
-    axios.post('http://localhost9000/api/quiz/new', payload)
-      .then(res => {
-        dispatch(setMessage(`Congrats: "${res.data.question} is a great question!`))
-        dispatch(resetForm())
-    })
-      .catch(err => {
-      console.log(err.message)  
-      dispatch(setMessage(err.message))
-    })
     // On successful POST:
     // - Dispatch the correct message to the the appropriate state
     // - Dispatch the resetting of the form
+    axios.post('http://localhost:9000/api/quiz/new', 
+      { 
+        question_text: input.newQuestion, 
+        true_answer_text: input.newTrueAnswer, 
+       false_answer_text: input.newFalseAnswer 
+      })
+    .then(res => {
+      dispatch(setMessage(`Congrats: "${res.data.question}" is a great question!`))
+      dispatch(resetForm())
+    })
+    .catch(err => {
+      dispatch({type:null, payload: err.message})
+    })
   }
 }
 // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
