@@ -80,9 +80,6 @@ export function postAnswer(quiz_id, answer_id) {
 
 export function postQuiz(input) {
   return function (dispatch) {
-    // On successful POST:
-    // - Dispatch the correct message to the the appropriate state
-    // - Dispatch the resetting of the form
     axios.post('http://localhost:9000/api/quiz/new', 
       { 
         question_text: input.newQuestion, 
@@ -98,4 +95,7 @@ export function postQuiz(input) {
     })
   }
 }
+   // On successful POST:
+    // - Dispatch the correct message to the the appropriate state
+    // - Dispatch the resetting of the form
 // ❗ On promise rejections, use log statements or breakpoints, and put an appropriate error message in state
