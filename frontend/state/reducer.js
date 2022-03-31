@@ -78,3 +78,5 @@ function form(state = initialFormState, action) {
 }
 
 export default combineReducers({ wheel, quiz, selectedAnswer, infoMessage, form })
+
+//adding a comment for committing purposes
